@@ -1,0 +1,149 @@
+# 🐳 Docker Desktop Deployment Guide
+
+## Complete Setup for Local Development and Testing
+
+This guide will help you deploy the entire DevOps project using Docker Desktop on Windows.
+
+---
+
+## ✅ Prerequisites
+
+1. **Docker Desktop** installed and running
+2. **Git** installed
+3. **Node.js** installed (for local testing)
+4. Repository cloned from GitHub
+
+---
+
+## 🚀 Quick Start - Deploy Everything Locally
+
+### Step 1: Start Docker Desktop
+
+1. Open Docker Desktop
+2. Wait for it to fully start (whale icon should be steady)
+3. Verify it's running:
+   ```powershell
+   docker --version
+   docker ps
+   ```
+
+### Step 2: Build the Sample Application
+
+```powershell
+# Navigate to sample app
+cd E:\DEV\devops-multicloud-project\phase2-cicd\sample-app
+
+# Install dependencies
+npm install
+
+# Run tests to verify everything works
+npm test
+
+# Build Docker image
+docker build -t devops-sample-app:latest .
+
+# Verify image was created
+docker images | findstr devops-sample-app
+```
+
+### Step 3: Run the Application
+
+```powershell
+# Run the container
+docker run -d `
+  --name devops-app `
+  -p 3000:3000 `
+  -e NODE_ENV=production `
+  devops-sample-app:latest
+
+# Check if it's running
+docker ps
+
+# View logs
+docker logs devops-app
+
+# Test the application
+curl http://localhost:3000
+curl http://localhost:3000/health
+curl http://localhost:3000/api/info
+```
+
+### Step 4: Access the Application
+
+Open your browser and go to:
+- **Main Page**: http://localhost:3000
+- **Health Check**: http://localhost:3000/health
+- **API Info**: http://localhost:3000/api/info
+
+---
+
+## 🔧 Docker Compose Setup (Recommended)
+
+Create a `docker-compose.yml` file for easier management:
+
+<function_calls>
+<invoke name="write_to_file">
+<parameter name="CodeContent">version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./phase2-cicd/sample-app
+      dockerfile: Dockerfile
+    container_name: devops-sample-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - devops-network
+
+  # Optional: Add a database for testing
+  mysql:
+    image: mysql:8.0
+    container_name: devops-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ChangeMe123!
+      MYSQL_DATABASE: devopsdb
+      MYSQL_USER: devops
+      MYSQL_PASSWORD: ChangeMe123!
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - devops-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Add Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: devops-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - devops-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+networks:
+  devops-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

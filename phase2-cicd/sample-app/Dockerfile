@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm install --production
 
 # Copy application code
 COPY . .
@@ -21,7 +21,7 @@ WORKDIR /app
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
+  adduser -S nodejs -u 1001
 
 # Copy dependencies and application from builder
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
