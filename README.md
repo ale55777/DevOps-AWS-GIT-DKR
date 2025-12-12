@@ -2,10 +2,31 @@
 
 A comprehensive DevOps project demonstrating Infrastructure as Code (IaC) and CI/CD implementation across AWS, Azure, and GCP.
 
+## 📚 Documentation
+
+**All guides and documentation are organized in the [`docs/`](docs/) folder!**
+
+### Quick Links:
+- 📖 [**Documentation Index**](docs/README.md) - Complete guide index
+- 🚀 [**Execution Guide**](docs/EXECUTION_GUIDE.md) - Step-by-step deployment
+- 🔑 [**Credentials Guide**](docs/CREDENTIALS_GUIDE.md) - Cloud setup (AWS, Azure, GCP)
+- 🐳 [**Docker Desktop Guide**](docs/DOCKER_DESKTOP_GUIDE.md) - Local deployment
+- ⚡ [**Quick Reference**](docs/QUICK_REFERENCE.md) - Common commands
+- 🔧 [**Pipeline Fixed**](docs/PIPELINE_FIXED.md) - CI/CD troubleshooting
+
+## 🎯 Quick Start
+
+### Deploy to Docker Desktop (Fastest):
+```powershell
+.\deploy-docker.ps1
+```
+Then open: http://localhost:3000
+
 ## Project Structure
 
 ```
 devops-multicloud-project/
+├── docs/                    # 📚 All documentation
 ├── phase1-iac/
 │   ├── terraform/
 │   │   ├── aws/
