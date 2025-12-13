@@ -113,7 +113,7 @@ jobs:
           docker save devops-sample-app:${{ github.sha }} -o /tmp/docker-image.tar
 
       - name: Upload Docker image artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docker-image
           path: /tmp/docker-image.tar
@@ -129,7 +129,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download Docker image artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: docker-image
           path: /tmp
@@ -264,7 +264,7 @@ jobs:
           echo "- Security Scan: ${{ needs.security-scan.result }}" >> metrics-report.md
 
       - name: Upload metrics report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: metrics-report
           path: metrics-report.md
